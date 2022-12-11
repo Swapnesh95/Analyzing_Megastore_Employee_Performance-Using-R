@@ -1,0 +1,809 @@
+---
+output:  
+  html_document:
+    css: bootstrap.css
+    
+      
+---
+
+<style type="text/css">
+
+body, td {
+   font-size: 16px;
+   
+}
+code.r{
+  font-size: 15px;
+  
+}
+pre {
+  font-size: 15px
+}
+</style>
+
+---
+
+
+<BR>
+<BR>
+<HTML>
+<HEAD>
+<BODY>
+<CENTER>
+<FONT SIZE=5, COLOR="#891A01">
+<BR> <B> PROBABILITY THEORY AND INTRODUCTORY STATISTICS </B>
+<BR> SWAPNESH TIWARI
+<BR> THE MEGASTORE EMPLOYEE REPORT
+<BR> Date :  `r format(Sys.time(), "%d %B, %Y")`
+</FONT>
+</CENTER>
+</HEAD>
+<BR>
+<BR>
+<BR>
+
+---
+
+---
+
+<BR>
+
+<CENTER>
+<P><BR>
+<FONT SIZE=3, COLOR="#079A2F">
+<B> <U> INTRO </U> </B> 
+</FONT>
+</CENTER>
+
+<BR>
+<FONT SIZE=2.5, COLOR="#8F079A">
+
+<BR> <H5> In the 21st century, Jobs have been one of the most important aspects for every individual to survive and strive, some of the jobs are designed the way it is comfortable for people to work. Since in the USA people need money and to provide for the government has created a system called hourly wages where people work whenever they are comfortable and have flexible hours, especially for students.  
+This data set is a representation of the rate at which hourly wages are set and defined for each employee in a total of 20 stores. This project will focus on using R studio to define some statistics, analyze the statistics, interpret the statistics and give meaningful observations using the data we have gathered. </H5>
+
+---
+
+---
+
+<BR> <H4> <B> SALARY SURVEYS </B> </H4>
+<BR> <H5> As discussed above in the 21st century Jobs are a very important aspect, Jobs also create salary and salary creates massive amounts of data, from companies’ financial department to government financial department. Jobs are a very important aspect of every company, and every job needs an employee which is the most important asset for every organization. Every organization tries to pursue a good quality of life for their employees, to do this organization can use the most important strategy which is a salary survey that gives an edge on are employees paid a fair amount of money according to their market value? Secondly, whenever you conduct a salary survey you develop a psychological feeling for every employee that you are concerned about their well-being. </H5> 
+
+---
+
+---
+
+<BR>
+<H4> <B>CONFIDENCE INTERVALS :</H4></B>   
+<BR><H5>Let’s take an example of the airlines as a practical application, Airlines XYZ has to design a seating layout for their aircraft which is also not too condensed and can also accommodate more passengers. To do this aircraft company hires a statistician and a data analyst to get the desired outcome. The data analyst starts gathering data from the population, Data analyst uses the mean weight of a passenger to determine the size of the seat, but the population is very huge, and it I difficult to get the mean weight of every passenger, so to accomplish this he takes a group of population which we call as the sample, the problem is will the sample determine that if the mean weight of a passenger is 72kgs is accurate?, to do that he has to get data from every population which is impossible therefore he uses a strategy called as Confidence Interval. So basically, confidence interval will give the analyst confidence that the mean weight lies and is related to the given population. Confidence interval is affected by two factors the sample size and variation in the weight of the population. So, if more variation is present in the population the wider the confidence interval will be and with less variation the narrower it will be. Similar to the sample size, the larger the sample more accurate and confident we will be about the data. of applications.  </H5>
+
+
+
+<BR>
+
+---
+
+---
+
+<BR>
+<FONT SIZE = 4, COLOR ="AB766A">
+<BR><B>Analysis</B>
+</FONT>
+<BR>
+<BR>
+
+
+---
+
+---
+
+<BR>
+
+```{r Libraries, warning=FALSE, message=FALSE}
+
+# LIBRARIES 
+
+library(readxl)
+library(tidyverse)
+library(dplyr)
+library(RColorBrewer)
+library(dbplyr)
+library(magrittr)
+library(mosaic)
+library(ggplot2)
+
+#PATH TO DATA SOURCE (DATASET)
+
+StoreSet <- read_excel("C://Users//User//OneDrive//Documents//ALY_6010//Datasets//M2Data-1.xlsx")
+PetSet <- read_excel("C://Users//User//OneDrive//Documents//ALY_6010//Datasets//M2Data-1.xlsx",sheet = "pets")
+
+
+```
+
+<BR>
+
+---
+
+---
+
+<BR>
+
+<BR>
+<FONT SIZE = 4, COLOR ="073175">
+<BR><B>FIRST TASK</B>
+</FONT>
+<BR>
+
+```{r}
+
+
+#Calculating Confidence Intervals for the below values 1.1 , for this I have calculated the grand mean and grand standard deviation of all the values using excel and then entered here manually to use it to calculate confidence interval.
+
+#Calculating values:
+
+StoreMean = 11.81
+StoreSD = 3.25 #Value round up to 3.25 from 3.248
+n = 247
+
+#The above values were calculated using excel we can also calculate the above values using R as follows : 
+
+#Calculate the grand mean and standard deviation value using R
+#Mean
+Sample  = 247
+
+SumOfStores =  sum(StoreSet$`Store 1`,na.rm=T)+sum(StoreSet$`Store 2`,na.rm = T)+sum(StoreSet$`Store 3`,na.rm = T)+sum(StoreSet$`Store 4`,na.rm = T)+sum(StoreSet$`Store 5`,na.rm = T)+sum(StoreSet$`Store 6`,na.rm = T)+sum(StoreSet$`Store 7`,na.rm = T)+sum(StoreSet$`Store 8`,na.rm = T)+sum(StoreSet$`Store 9`,na.rm = T)+sum(StoreSet$`Store 10`,na.rm = T)+sum(StoreSet$`Store 11`,na.rm = T)+sum(StoreSet$`Store 12`,na.rm = T)+sum(StoreSet$`Store 13`,na.rm = T)+sum(StoreSet$`Store 14`,na.rm = T)+sum(StoreSet$`Store 15`,na.rm = T)+sum(StoreSet$`Store 16`,na.rm = T)+sum(StoreSet$`Store 17`,na.rm = T)+sum(StoreSet$`Store 18`,na.rm = T)+sum(StoreSet$`Store 19`,na.rm = T)+sum(StoreSet$`Store 20`,na.rm = T)
+SalaryMean  = round(SumOfStores/Sample,2)
+
+#Standard Deviation
+
+StoreSTDEV=c(StoreSet$`Store 1`,StoreSet$`Store 2`,StoreSet$`Store 3`,StoreSet$`Store 4`,StoreSet$`Store 5`,StoreSet$`Store 6`,StoreSet$`Store 7`,StoreSet$`Store 8`,StoreSet$`Store 9`,StoreSet$`Store 10`,StoreSet$`Store 11`,StoreSet$`Store 12`,StoreSet$`Store 13`,StoreSet$`Store 14`,StoreSet$`Store 15`,StoreSet$`Store 16`,StoreSet$`Store 17`,StoreSet$`Store 18`,StoreSet$`Store 19`,StoreSet$`Store 20`)
+GrandSD= sd(StoreSTDEV,na.rm = T)
+
+GrandTable = rbind(SalaryMean, GrandSD)
+
+knitr::kable(GrandTable) %>% 
+  kableExtra::kable_classic()
+
+#For 90%, 92% and 96% interval
+# TO do this we will take from the value to the farthest point of interest, so for example we have value as 0.90 but the rest value 0.10 is distributed on the both sides as 0.05 and 0.05 so add the 0.05 to 0.90 = 0.95 and therefore 0.95 is the value for which we will calculate.
+
+CI90 = qnorm(0.95) 
+CI92 = qnorm(0.96)
+CI96 = qnorm(0.98)
+
+
+#Or we can also use the other which are the alphas divided by 2 which are 0.05, 0.04 and 0.02 percent of the area to calculate the confidence interval.
+
+CI0.5 = qnorm(0.05)
+CI0.4 = qnorm(0.04)
+CI0.2 = qnorm(0.02)
+
+#therefore we calculate the margin of error to estimate the true mean value, we will calculate it for all the values above
+Error90 = pnorm(0.95) * StoreSD/sqrt(n)
+Error92 = pnorm(0.96) * StoreSD/sqrt(n)
+Error96 = pnorm(0.98) * StoreSD/sqrt(n)
+
+#Calculating width 
+
+Width90 = 2 * Error90
+Width92 = 2 * Error92
+Width96 = 2 * Error96
+
+#Now to calculate the lower and upper bounds for : 
+
+#90%
+LowerBound90 = StoreMean - CI90
+UpperBound90 = StoreMean + CI90
+
+#92%
+LowerBound92 = StoreMean - CI92
+UpperBound92 = StoreMean + CI92
+
+#96%
+LowerBound96 = StoreMean - CI96
+UpperBound96 = StoreMean + CI96
+
+#Creating a table
+
+Objects1 = c(CI90, Error90,LowerBound90, UpperBound90, Width90)
+
+Objects2 = c(CI92, Error92,LowerBound92,UpperBound92,Width92)
+
+Objects3 = c(CI96, Error96,LowerBound96, UpperBound96,Width96)
+
+Table90   = matrix(Objects1, ncol = 5,  byrow = TRUE)
+Values   = c("90%")
+Name     = c("Z Score ","Margin Of Error ","Lower Confidence interval ","Upper Confidence interval ", "Width ")
+colnames(Table90)  = Name
+rownames(Table90)  = Values
+
+Table92    = matrix(Objects2,ncol = 5,  byrow = TRUE)
+Values   = c("92%")
+Name     = c("Z Score ","Margin Of Error ","Lower Confidence interval ","Upper Confidence interval ", "Width ")
+colnames(Table92)  = Name
+rownames(Table92)  = Values
+
+Table96    = matrix(Objects3,ncol = 5,  byrow = TRUE)
+Values   = c("96%")
+Name     = c("Z Score ","Margin Of Error ","Lower Confidence interval ","Upper Confidence interval ", "Width ")
+colnames(Table96)  = Name
+rownames(Table96)  = Values
+
+
+FinalTable = rbind(Table90,Table92, Table96)
+
+#Creating a beautiful table using Knitr Kable function and then adding visualization using the kableExtra package.
+knitr::kable(FinalTable) %>% 
+  kableExtra::kable_material_dark()
+
+
+```
+
+
+
+<P><BR>
+<FONT SIZE=2.5, COLOR="#15C1C9">
+According to our table above we have different values, since we have pick a sample we need to know how confident are we with the hourly wages of the employees in average of all stores.
+<li> We can see in the table above that ``r LowerBound90`` to ``r UpperBound90`` is the mean hourly wages of an employee, being 90% confident which shows minimal variations and therefore we have narrow confidence interval.
+<li> Secondly, ``r LowerBound92`` to ``r UpperBound92`` is the mean hourly wages of an employee, being 92% confident which again shows moderate variations and therefore we still have narrow confidence interval.
+<li> Thirdly, ``r LowerBound96`` to ``r UpperBound96`` is the mean hourly wages of an employee, being 96% confident which shows more variations in data and therefore we have wider confidence interval.
+<li>The width of the different confidence intervals are different , it increases as we increase our confidence interval, it is because as we increase our margin of error thus resulting in more wider and flatter graph distribution.
+</FONT>
+<BR>
+
+<BR>
+
+---
+
+---
+
+<BR>
+
+<BR>
+<FONT SIZE = 4, COLOR ="073175">
+<BR><B>FIRST TASK 1.3</B>
+</FONT>
+<BR>
+
+```{r}
+
+Mean1 = 11.84
+SD1 = 1.21
+n1 = 20
+
+#We have a grand mean of 8.450 got by diving the values in store 1 by sample number = 20, same for the standard deviation 
+
+#For 90%, 92% and 96% interval
+# TO do this we will take from the value to the farthest point of interest, so for example we have value as 0.90 but the rest value 0.10 is distributed on the both sides as 0.05 and 0.05 so add the 0.05 to 0.90 = 0.95 and therefore 0.95 is the value for which we will calculate.
+
+Store1CF90 = qt(0.95,19) 
+Store1CF92 = qt(0.96,19)
+Store1CF96 = qt(0.98,19)
+
+
+#Or we can also use the other which are the alphas divided by 2 which are 0.05, 0.04 and 0.02 percent of the area to calculate the confidence interval.
+
+Store1CI0.5 = qt(0.05,19)
+Store1CI0.4 = qt(0.04,19)
+Store1CI0.2 = qt(0.02,19)
+
+#therefore we calculate the margin of error to estimate the true mean value, we will calculate it for all the values above
+Store1Error90 = pnorm(0.95) * SD1/sqrt(n1)
+Store1Error92 = pnorm(0.96) * SD1/sqrt(n1)
+Store1Error96 = pnorm(0.98) * SD1/sqrt(n1)
+
+#Calculating width 
+
+Store1Width90 = 2 * Store1Error90
+Store1Width92 = 2 * Store1Error92
+Store1Width96 = 2 * Store1Error96
+
+#Now to calculate the lower and upper bounds for : 
+
+#90%
+Store1LowerBound90 = Mean1 - Store1CF90
+Store1UpperBound90 = Mean1 + Store1CF90
+
+#92%
+Store1LowerBound92 = Mean1 - Store1CF92
+Store1UpperBound92 = Mean1 + Store1CF92
+
+#96%
+Store1LowerBound96 = Mean1 - Store1CF96
+Store1UpperBound96 = Mean1 + Store1CF96
+
+
+#Creating a table
+
+StoreAT1 = c(Store1CF90, Store1Error90,Store1LowerBound90, Store1UpperBound90, Store1Width90)
+
+StoreAT2 = c(Store1CF92, Store1Error92,Store1LowerBound92,Store1UpperBound92,Store1Width92)
+
+StoreAT3 = c(Store1CF96, Store1Error96,Store1LowerBound96, Store1UpperBound96,Store1Width96)
+
+ST190   = matrix(StoreAT1, ncol = 5,  byrow = TRUE)
+Values   = c("90%")
+Name     = c("T Values ","Margin Of Error ","Lower Confidence interval ","Upper Confidence interval ", "Width ")
+colnames(ST190)  = Name
+rownames(ST190)  = Values
+
+ST192    = matrix(StoreAT2,ncol = 5,  byrow = TRUE)
+Values   = c("92%")
+Name     = c("T Values ","Margin Of Error ","Lower Confidence interval ","Upper Confidence interval ", "Width ")
+colnames(ST192)  = Name
+rownames(ST192)  = Values
+
+ST196    = matrix(StoreAT3,ncol = 5,  byrow = TRUE)
+Values  = c("96%")
+Name    = c("T Values ","Margin Of Error ","Lower Confidence interval ","Upper Confidence interval ", "Width ")
+colnames(ST196)  = Name
+rownames(ST196)  = Values
+
+
+Store1Final = rbind(ST190,ST192, ST196)
+
+#Creating a beautiful table using Knitr Kable function and then adding visualization using the kableExtra package.
+knitr::kable(Store1Final) %>% 
+  kableExtra::kable_classic_2()
+```
+
+
+<BR>
+
+<BR>
+<FONT SIZE = 4, COLOR ="073175">
+<BR><B>FIRST TASK 1.3</B>
+</FONT>
+<BR>
+
+<P><BR>
+<FONT SIZE=2.5, COLOR="#15C1C9">
+According to our table above we have different values, since we have pick a sample we need to know how confident are we with the hourly wages of the employees per store in ever store individually.
+<li> We can see in the table above that ``r Store1LowerBound90`` to ``r Store1UpperBound90`` is the mean hourly wages of an employee per store, being 90% confident which shows minimal variations and therefore we have narrow confidence interval.
+<li> Secondly, ``r Store1LowerBound92`` to ``r Store1UpperBound92`` is the mean hourly wages of an employee per store, being 92% confident which again shows moderate variations and therefore we still have narrow confidence interval.
+<li> Thirdly, ``r Store1LowerBound96`` to ``r Store1UpperBound96`` is the mean hourly wages of an employee per store, being 96% confident which shows more variations in data and therefore we have wider confidence interval.
+<li>The width of the different confidence intervals are different , it increases as we increase our confidence interval, it is because as we increase our margin of error thus resulting in more wider and flatter graph distribution.
+<li>Compared with the previous task we can see that the the lower bound value and the upper bound value has been changed as we see this table as per store, therefore the mean values has been completely changed since the sample population has been changed. Huge variations are present in this data compared to the grand average of whole sample.
+</FONT>
+<BR>
+
+<BR>
+
+---
+
+---
+
+<BR>
+
+<BR>
+<FONT SIZE = 4, COLOR ="073175">
+<BR><B>FIRST TASK 1.4</B>
+</FONT>
+<BR>
+
+```{r message=FALSE, warning=FALSE}
+#Plotting a density graph using the table 1 from this report which is named as FinalTable in task 1
+
+#Density Plot
+
+Denseplot = density(FinalTable, adjust = 2) %>% 
+  plot()
+
+#To plot the values on graph we need to calculate the x from the critical values therefore x = z * sd + mean
+
+# For 92% to the right 
+X1 = CI92 * StoreSD + StoreMean
+
+#For 92% to the left that is negative
+X2 = CI0.4 * StoreSD + StoreMean
+
+abline(v=StoreMean, col = "green")
+abline(v=X1, col = "darkred")
+abline(v=X2, col = "purple")
+
+       
+
+text(x = StoreMean,
+     paste("Mean :", StoreMean),
+     y = 0.03,
+     col = "green",
+     cex = 0.9,
+     srt = 90,
+     pos = 2)
+
+text(x = X1,
+     paste("CV : 1.750686, Value :", X1),
+     y = 0.04,
+     col = "darkred",
+     cex = 0.6,
+     srt = 90,
+     pos = 2.8)
+
+text(x = X2,
+     paste("CV : -1.750686, Value :", X2),
+     y = 0.04,
+     col = "purple",
+     cex = 0.56,
+     srt = 90,
+     pos = 2)
+
+
+
+#Just a short example of highlighting a small portion of 92% confidence interval to the left value which is 17.49973
+Denseplot2 = density(FinalTable, adjust = 2)
+plot(Denseplot2)
+polygon(c(Denseplot2$x[Denseplot2$x >= X1 ], X1),
+        c(Denseplot2$y[Denseplot2$x >= X1 ], 0),
+        col = "slateblue1",
+        border = 1)
+abline(v=X1, col = "darkred") #Adding vertical line
+text(x = X1,
+     paste("CV : 1.750686, Value :", X1),
+     y = 0.04,
+     col = "darkred",
+     cex = 0.6,
+     srt = 90,
+     pos = 2.8)
+
+
+
+
+#Another way of highlighting the critical value for Z using mosaic library
+
+#Z critical value to the right side
+xqnorm(0.96)
+
+#Z Critical value to the left side
+xqnorm(1-0.96)
+
+
+```
+<BR>
+
+---
+
+---
+
+<BR>
+
+<BR>
+<FONT SIZE = 4, COLOR ="073175">
+<BR><B>FIRST TASK 1.5</B>
+</FONT>
+<BR>
+
+```{r warning=FALSE , fig.width=8, fig.height=6}
+
+Store1 = boxplot.stats(StoreSet$`Store 1`)$stats %>% 
+  round(1)
+
+Store2 = boxplot.stats(StoreSet$`Store 2`)$stats %>% 
+  round(1)
+
+Store3 = boxplot.stats(StoreSet$`Store 3`)$stats %>% 
+  round(1)
+
+Store4 = boxplot.stats(StoreSet$`Store 4`)$stats %>% 
+  round(1)
+
+Store5 = boxplot.stats(StoreSet$`Store 5`)$stats %>% 
+  round(1)
+
+Store6 = boxplot.stats(StoreSet$`Store 6`)$stats %>% 
+  round(1)
+
+Store7 = boxplot.stats(StoreSet$`Store 7`)$stats %>% 
+  round(1)
+
+Store8 = boxplot.stats(StoreSet$`Store 8`)$stats %>% 
+  round(1)
+
+Store9 = boxplot.stats(StoreSet$`Store 9`)$stats %>% 
+  round(1)
+
+Store10 = boxplot.stats(StoreSet$`Store 10`)$stats %>% 
+  round(1)
+
+Store11 = boxplot.stats(StoreSet$`Store 11`)$stats %>% 
+  round(1)
+
+Store12 = boxplot.stats(StoreSet$`Store 12`)$stats %>% 
+  round(1)
+
+Store13 = boxplot.stats(StoreSet$`Store 13`)$stats %>% 
+  round(1)
+
+Store14 = boxplot.stats(StoreSet$`Store 14`)$stats %>% 
+  round(1)
+
+Store15 = boxplot.stats(StoreSet$`Store 15`)$stats %>% 
+  round(1)
+
+Store16 = boxplot.stats(StoreSet$`Store 16`)$stats %>% 
+  round(1)
+
+Store17 = boxplot.stats(StoreSet$`Store 17`)$stats %>% 
+  round(1)
+
+Store18 = boxplot.stats(StoreSet$`Store 18`)$stats %>% 
+  round(1)
+
+Store19 = boxplot.stats(StoreSet$`Store 19`)$stats %>% 
+  round(1)
+
+Store20 = boxplot.stats(StoreSet$`Store 20`)$stats %>% 
+  round(1)
+
+
+#Creating a vector named store stats
+StoreStats = c(Store1,Store2,Store3,Store4,Store5,Store6,Store7,Store8,Store9,Store10,Store11,Store12,Store13,Store14,Store15,Store16,Store17,Store18,Store19,Store20)
+
+#Then creating a matrix to store all stats into one table
+StoreMatrix    = matrix(StoreStats,ncol = 20,  byrow = TRUE)
+NewValues   = c("min", "Q1", "Q2", "Q3", "Max")
+NewName     = c("1 ","2 ","3 ","4 ", "5", "6", "7", "8", "9", "10", "11","12", "13", "14", "15", "16", "17", "18", "19", "20")
+colnames(StoreMatrix)  = NewName
+rownames(StoreMatrix)  = NewValues
+
+#Creating a dataframe to use with ggplot
+
+StoreStats2 = as.data.frame(StoreMatrix)
+
+
+#Creating multiple box plots using ggplot
+
+ggplot(data = stack(StoreStats2), aes(x = ind, y = values)) +
+  
+       geom_boxplot(fill = "#06D0E1", colour = "#1F3552", # Colors
+                    alpha = 0.9, outlier.colour = "green", width = 0.13) +
+  
+  stat_summary(geom="text", fun = quantile, #For Quantiles
+               aes(label=sprintf("%1.1f", ..y..), color = factor(ind)), position = position_nudge(x=0.33), size = 2.5) +
+  
+    stat_summary(geom="pointrange", fun = "mean", #For mean
+               aes(label=sprintf("%1.1f", ..y..), color = "D7E106"), position = position_nudge(x=0.10), size = 0.4)+
+  
+  scale_y_continuous(breaks = c(5:20))+
+  
+       ggtitle("Boxplot from data frame ggplot2") + # Plot title
+  
+       theme(legend.position = "none"
+            ) +
+  
+labs(x= "Number of Store",
+     y = "Employee Wages",
+     title = "Boxplot containing employee salary information of 20 different stores",
+  )
+
+```
+
+<BR>
+
+<BR>
+<FONT SIZE = 4, COLOR ="073175">
+<BR><B>FIRST TASK 1.3</B>
+</FONT>
+<BR>
+
+<P><BR>
+<FONT SIZE=2.5, COLOR="#15C1C9">
+The graph above is a box plot containing values of hourly wages from 20 different stores, this box plot shows different values such as Minimum value, maximum value, Quantile 1,2 and 3. The data of the store 14 is very small, it means the data is more condensed and very close to the mean value therefore the data in store 14 is very accurate and reliable whereas on the other hand we can see store 20 has a data which is too much dispersed away from the mean value which shows that data is away from mean and less accurate and reliable. Store 14 relative wages varies much less than the other stores.So the predictions made in store 14 are more dependable than any other store in our observation.
+</FONT>
+<BR>
+
+
+<BR>
+
+---
+
+---
+
+<BR>
+
+<BR>
+<FONT SIZE = 4, COLOR ="073175">
+<BR><B>SECOND TASK</B>
+</FONT>
+<BR>
+```{r }
+
+# Creating a statistical analysis of population proportion
+
+n = 204
+Yes = 100
+no = n - Yes
+PSucess = Yes/n
+PFail = no/n
+
+
+z90 = qnorm(0.95)
+z92 = qnorm(0.96)
+z96 = qnorm(0.98)
+
+
+M90 = z90*sqrt((PSucess*PFail/n))
+M92 = z92*sqrt((PSucess*PFail/n))
+M96 = z96*sqrt((PSucess*PFail/n))
+
+#Lower Limit
+L90 = PSucess - M90
+L92 = PSucess - M92
+L96 = PSucess - M96
+
+#Upper Limit
+U90 = PSucess + M90
+U92 = PSucess + M92
+U96 = PSucess + M96
+
+#Width
+W90 = 2 * M90
+W92 = 2 * M92
+W96 = 2 * M96
+
+Pet90 = c(z90, M90,L90, U90, W90)
+Pet92 = c(z92, M92,L92, U92, W92)
+Pet96 = c(z96, M96,L96, U96, W96)
+
+
+Pet290   = matrix(Pet90, ncol = 5,  byrow = TRUE)
+Values   = c("90%")
+Name     = c("Z Score ","MOE ","Lower CF ","Upper CF ", "Width ")
+colnames(Pet290)  = Name
+rownames(Pet290)  = Values
+
+
+Pet292   = matrix(Pet92, ncol = 5,  byrow = TRUE)
+Values   = c("92%")
+Name     = c("Z Score ","MOE ","Lower CF ","Upper CF ", "Width ")
+colnames(Pet292)  = Name
+rownames(Pet292)  = Values
+
+Pet296    = matrix(Pet96,ncol = 5,  byrow = TRUE)
+Values   = c("96%")
+Name     = c("Z Score ","MOE ","Lower CF ","Upper CF ", "Width ")
+colnames(Pet296)  = Name
+rownames(Pet296)  = Values
+
+
+FinalTable2 = rbind(Pet290,Pet292, Pet296)
+
+#Creating a beautiful table using Knitr Kable function and then adding visualization using the kableExtra package.
+knitr::kable(FinalTable2) %>% 
+  kableExtra::kable_material_dark()
+
+```
+<BR>
+
+---
+
+---
+
+<BR>
+
+<BR>
+<FONT SIZE = 4, COLOR ="073175">
+<BR><B>SECOND TASK 2.2</B>
+</FONT>
+<BR>
+
+
+```{r}
+#Creating objects to create bar plot and pie chart
+
+
+par(mfrow = c(1,2))
+
+YesNo = c(Yes,no)
+
+tableyes = matrix(YesNo, ncol = 2,  byrow = TRUE)
+Values   = c("Values")
+Name     = c("YES", "NO")
+colnames(tableyes)  = Name
+rownames(tableyes)  = Values
+
+#Bar plot
+
+PropBar = barplot(tableyes,
+        main = "Bar plot - Yes & No",
+        xlab = "",
+        ylab = "",
+        ylim = c(0,120),
+        col = terrain.colors(2),
+        )
+text(x = PropBar, 
+     y = 110, 
+     paste(round(tableyes))
+     )
+
+title(ylab = "Frequencies", line = 2.5, cex.lab = 1.0, col.lab = "#0687E1")
+title(xlab = "Response of population", line = 2.6, cex.lab = 1.0, col.lab = "#991A04")
+
+box(which  = "figure", col = "green")
+
+#Pie Chart
+
+pie1 <- paste0(round(100 * YesNo/sum(YesNo), 4), "%") #Create percentage to display on pie chart
+
+pie(YesNo,
+    main = "Pie Chart - Yes & No",
+    labels = pie1,
+    col = terrain.colors(2))
+
+legend ("bottomright", #Legend
+       legend=paste(unique(sort(pie1)), c("Number of people having pets", "Number of people not having pets")),
+       fill = terrain.colors(2),
+       cex = 0.6)
+
+box(which  = "figure", col = "red")
+
+```
+
+<P><BR>
+<FONT SIZE=2.5, COLOR="#15C1C9">
+The bar plot and the pie chart explains us how many people have pets and how many people do not have pets, in the survey questionnaire and answers in form of yes and no as you can see in the bar plot the values have been plot accordingly. This means that people prefer not to have pets rather than having pets but the difference is not significant.  
+The pie chart shows the same information as the bar plot but now in percentage format, the value ``r pie1`` , 49% having pets and 50% not having pets.
+<BR>
+
+<BR>
+
+---
+
+---
+
+<BR>
+
+<BR>
+<FONT SIZE = 4, COLOR ="073175">
+<BR><B>CONCLUSION</B>
+</FONT>
+<BR>
+
+<BR><H5> This project puts a light on two different excel datasheets, one is the salary survey and the other one is the number of people with and without pets. The different task in this project focuses on analysis and visualizing different data needed to interpret and generate an outcome. Starting with the confidence interval of different stores and their salary data and ending with the pet’s section has given me an idea of how to gather the data, analyze the data, implement the data and how interpret the data, and provide the best outcome and recommendations for further analysis.  
+The outcome of this report is based on two data:  
+Salary Survey - in the 21st-century salary survey is an important aspect of every individual, it helps in maintaining financial stability and productivity in terms of profit and expenditure. In task 1 as a whole, we observed different aspects and data of the salary survey from 20 different stores by obtaining the grand mean and standard deviation from which we observed the outcome of the hourly wages of employees.  
+Pets - Value for pets was in the form of Yes and No, which needed to use different functions in excel such as count if to count the number of individuals who said yes and the number of individuals who said no. This task was completed by calculating the population proportion of yes and no and then using formulas to calculate the confidence interval to compare the small data with the whole population.
+</H5>
+
+<BR>
+
+---
+
+---
+
+<BR>
+
+<BR>
+<CENTER>
+<P><BR>
+<FONT SIZE=3, COLOR="#079A2F">
+<B> <U> BIBLOGRAPHY </U> </B> 
+</FONT>
+</CENTER>
+
+<BR>
+<FONT SIZE=2.5, COLOR="#8F079A">
+
+<BR><H5> Bluman, A. (2014). Elementary Statistics: A step by step approach 9e. McGraw Hill.  
+Kabacoff, R. I. (2015). R in action: data analysis and graphics with R. Simon and Schuster.
+</FONT> 
+</H5>
+
+<BR>
+
+<BR>
+<CENTER>
+<P><BR>
+<FONT SIZE=3, COLOR="#079A2F">
+<B> <U> APPENDIX </U> </B> 
+</FONT>
+</CENTER>
+
+<BR>
+<FONT SIZE=2.5, COLOR="#8F079A">
+
+<BR><H5> An R Markdown file has been attached to this report. The name of the file is M2Project_Tiwari.rmd<BR>
+
+---
+
+---
+
+<BR>
